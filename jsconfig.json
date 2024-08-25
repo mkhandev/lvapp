@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+        "@/*": [
+          "resources/aa/js/*"
+        ]
+      },
+      "jsx": "preserve",
+    },
+    "exclude": [
+      "node_modules",
+      "public"
+    ]
+  }
