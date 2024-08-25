@@ -1,19 +1,33 @@
-<script setup></script>
+<script setup>
+import { computed } from "vue";
+import { usePage } from "@inertiajs/vue3";
+
+const page = usePage();
+const flashSuccess = computed(() => page.props.flash.success);
+</script>
 
 <template>
-  <div>
-      <header>
-          <h1>Header Section</h1>
-      </header>
+    <div>
+        <header>
+            <h1>Header Section</h1>
+        </header>
 
-      <article>
-          <slot>Default Content</slot>
-      </article>
+        <article>
+            <div v-if="flashSuccess" class="success">
+                {{ flashSuccess }}
+            </div>
+            <slot>Default Content</slot>
+        </article>
 
-      <footer>
-          <h1>Footer Section</h1>
-      </footer>
-  </div>
+        <footer>
+            <h1>Footer Section</h1>
+        </footer>
+    </div>
 </template>
 
-<style></style>
+<style scoped>
+.success {
+    background: green;
+    color: white;
+}
+</style>
