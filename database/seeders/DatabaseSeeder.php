@@ -15,11 +15,23 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        \App\Models\User::factory()->create([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'is_admin' => true
         ]);
 
-        \App\Models\Listing::factory(25)->create();
+        \App\Models\User::factory()->create([
+            'name' => 'Vistitor User',
+            'email' => 'visitor@example.com',
+        ]);
+
+        \App\Models\Listing::factory(10)->create([
+            'by_user_id' => 1
+        ]);
+
+        \App\Models\Listing::factory(10)->create([
+            'by_user_id' => 2
+        ]);
     }
 }

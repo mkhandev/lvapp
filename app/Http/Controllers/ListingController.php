@@ -3,16 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Listing;
+use Gate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ListingController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Listing $listing)
     {
-
+        //Gate::authorize("view", $listing);
+         Gate::authorize("viewAny", $listing);
+        
+        
         return inertia("Listing/Index", [
             'listings' => Listing::all(),
         ]);
@@ -23,6 +28,9 @@ class ListingController extends Controller
      */
     public function create()
     {
+        //Ypu can add permission like this way
+        //Gate::authorize("create", Listing::class);
+
         return inertia("Listing/Create");
     }
 
@@ -31,7 +39,12 @@ class ListingController extends Controller
      */
     public function store(Request $request)
     {
-        Listing::create(
+        //$request->user()->listings->create();
+        // if we use this then no need to add by_user_id
+        //data save by the users realtion with listings
+        //or please use Listing::create. then need to add by_user_id
+
+        $request->user()->listings()->create(
             $request->validate([
                 'beds' => 'required|integer|min:0|max:20',
                 'baths' => 'required|integer|min:0|max:20',
@@ -41,7 +54,8 @@ class ListingController extends Controller
                 'street' => 'required',
                 'street_nr' => 'required|min:1|max:1000',
                 'price' => 'required|integer|min:1|max:20000000',
-            ]));
+            ])
+        );
 
         return redirect()->route('listing.index')
             ->with('success', 'Listing was created!');
@@ -52,6 +66,13 @@ class ListingController extends Controller
      */
     public function show(Listing $listing) //route model binding
     {
+        // if(Auth::user()->cannot("view", $listing)){
+        //     abort(403);
+        // }
+
+        //OR
+        //Gate::authorize("view", $listing);
+        
         return inertia("Listing/Show", [
             'listing' => $listing,
         ]);
@@ -62,6 +83,8 @@ class ListingController extends Controller
      */
     public function edit(Listing $listing)
     {
+        Gate::authorize("update", $listing);
+
         return inertia("Listing/Edit", [
             'listing' => $listing,
         ]);
