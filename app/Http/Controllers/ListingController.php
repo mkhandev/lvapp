@@ -31,7 +31,24 @@ class ListingController extends Controller
      */
     public function store(Request $request)
     {
-        Listing::create(
+        //$request->user()->listings->create();
+        // if we use this then no need to add by_user_id
+        //data save by the users realtion with listings
+        //or please use Listing::create. then need to add by_user_id
+
+        // $request->user()->listings->create(
+        //     $request->validate([
+        //         'beds' => 'required|integer|min:0|max:20',
+        //         'baths' => 'required|integer|min:0|max:20',
+        //         'area' => 'required|integer|min:15|max:1500',
+        //         'city' => 'required',
+        //         'code' => 'required',
+        //         'street' => 'required',
+        //         'street_nr' => 'required|min:1|max:1000',
+        //         'price' => 'required|integer|min:1|max:20000000',
+        //     ]));
+
+        $request->user()->listings()->create(
             $request->validate([
                 'beds' => 'required|integer|min:0|max:20',
                 'baths' => 'required|integer|min:0|max:20',
@@ -41,7 +58,8 @@ class ListingController extends Controller
                 'street' => 'required',
                 'street_nr' => 'required|min:1|max:1000',
                 'price' => 'required|integer|min:1|max:20000000',
-            ]));
+            ])
+        );
 
         return redirect()->route('listing.index')
             ->with('success', 'Listing was created!');

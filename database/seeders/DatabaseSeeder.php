@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
-        \App\Models\Listing::factory(25)->create();
+        \App\Models\Listing::factory(25)->create([
+            'by_user_id' => 1
+        ]);
     }
 }
