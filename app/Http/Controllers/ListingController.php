@@ -5,22 +5,31 @@ namespace App\Http\Controllers;
 use App\Models\Listing;
 use Gate;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class ListingController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Listing $listing)
+    public function index(Request $request, Listing $listing)
     {
         //Gate::authorize("view", $listing);
-         Gate::authorize("viewAny", $listing);
-        
-        
-        return inertia("Listing/Index", [
-            'listings' => Listing::all(),
+        Gate::authorize("viewAny", $listing);
+
+        $filters = $request->only([
+            'priceFrom', 'priceTo', 'beds', 'baths', 'areaFrom', 'areaTo',
         ]);
+
+        return inertia(
+            'Listing/Index',
+            [
+                'filters' => $filters,
+                'listings' => Listing::mostRecent()
+                    ->filter($filters)
+                    ->paginate(10)
+                    ->withQueryString(),
+            ]
+        );
     }
 
     /**
@@ -72,7 +81,7 @@ class ListingController extends Controller
 
         //OR
         //Gate::authorize("view", $listing);
-        
+
         return inertia("Listing/Show", [
             'listing' => $listing,
         ]);
@@ -120,6 +129,6 @@ class ListingController extends Controller
         $listing->delete();
 
         return redirect()->back()
-        ->with('success', 'Listing was deleted!');
+            ->with('success', 'Listing was deleted!');
     }
 }
