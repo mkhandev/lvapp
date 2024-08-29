@@ -17,6 +17,16 @@ const filterForm = useForm({
 const filter = () => {
     filterForm.get(route("listing.index"))
 }
+
+const clear = () => {
+  filterForm.priceFrom = null
+  filterForm.priceTo = null
+  filterForm.beds = null
+  filterForm.baths = null
+  filterForm.areaFrom = null
+  filterForm.areaTo = null
+  filter()
+}
 </script>
 
 <template>
@@ -67,7 +77,7 @@ const filter = () => {
             </div>
 
             <button type="submit" class="btn-normal">Filter</button>
-            <button type="reset">Clear</button>
+            <button type="reset" @click="clear">Clear</button>
         </div>
     </form>
 </template>
