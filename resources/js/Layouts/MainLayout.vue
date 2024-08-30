@@ -23,9 +23,14 @@ const user = computed(() => page.props.user);
                 </div>
 
                 <div v-if="user" class="flex items-center gap-4">
-                    <div class="text-sm text-gray-500">{{ user.name }}</div>
                     <Link
-                        :href="route('listing.create')"
+                        :href="route('realtor.listing.index')"
+                        class="hover:underline text-[#6366F1]"
+                        >{{ user.name }}</Link
+                    >
+                    <div class="text-sm text-gray-500"></div>
+                    <Link
+                        :href="route('realtor.listing.create')"
                         class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium p-2 rounded-md"
                         >+ New Listing</Link
                     >

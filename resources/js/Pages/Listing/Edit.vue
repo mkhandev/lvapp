@@ -17,7 +17,7 @@ const form = useForm({
 });
 
 const update = () =>
-    form.put(route("listing.update", { listing: props.listing.id }));
+    form.put(route("realtor.listing.update", { listing: props.listing.id }));
 </script>
 <template>
     <form @submit.prevent="update">

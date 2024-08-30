@@ -20,7 +20,7 @@ const props = defineProps({
         />
     </div>
     <div v-if="listings.data.length" class="w-full flex justify-center mt-8 mb-8">
-        <Pagination v-for="(link,index) in listings.links" :key="index" :link="link" />
+        <Pagination :links="listings.links" />
     </div>
 </template>
 
