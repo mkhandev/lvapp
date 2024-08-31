@@ -16,9 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleInertiaRequests::class,
         ]);
 
-        // $middleware->validateCsrfTokens(except: [
-        //     '/logout',
-        // ]);
+        $middleware->validateCsrfTokens(except: [
+            '/login',
+            '/logout',
+            '/realtor/listing/*',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
