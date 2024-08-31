@@ -1,7 +1,33 @@
+<script setup>
+import { ref, computed } from "vue";
+import ListingAddress from "@/Components/ListingAddress.vue";
+import ListingSpace from "@/Components/ListingSpace.vue";
+import Price from "@/Components/Price.vue";
+import Box from "@/Components/UI/Box.vue";
+import { useMonthlyPayment } from "@/Composables/useMonthlyPayment";
+
+const props = defineProps({
+    listing: Object,
+});
+
+const interestRate = ref(2.5);
+const duration = ref(15);
+
+const { monthlyPayment, totalPaid, totalInterest } = useMonthlyPayment(
+    props.listing.price,
+    interestRate,
+    duration
+);
+</script>
+
+
 <template>
     <div class="flex flex-col-reverse md:grid md:grid-cols-12 gap-4">
         <Box class="md:col-span-7 flex items-center">
-            <div class="w-full text-center font-medium text-gray-500">
+            <div v-if="listing.images.length" class="grid grid-cols-3 gap-1">
+                <img v-for="(image,index) in listing.images" :src="image.src" :key="index"/>
+            </div>
+            <div v-else class="w-full text-center font-medium text-gray-500">
                 No images
             </div>
         </Box>
@@ -70,24 +96,3 @@
     </div>
 </template>
 
-<script setup>
-import { ref, computed } from "vue";
-import ListingAddress from "@/Components/ListingAddress.vue";
-import ListingSpace from "@/Components/ListingSpace.vue";
-import Price from "@/Components/Price.vue";
-import Box from "@/Components/UI/Box.vue";
-import { useMonthlyPayment } from "@/Composables/useMonthlyPayment";
-
-const props = defineProps({
-    listing: Object,
-});
-
-const interestRate = ref(2.5);
-const duration = ref(15);
-
-const { monthlyPayment, totalPaid, totalInterest } = useMonthlyPayment(
-    props.listing.price,
-    interestRate,
-    duration
-);
-</script>
