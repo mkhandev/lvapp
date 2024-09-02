@@ -6,6 +6,7 @@ use App\Models\Listing;
 use Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class RealtorListingController extends Controller
 {
@@ -23,6 +24,7 @@ class RealtorListingController extends Controller
                 ->listings()
                 ->filter($filters)
                 ->withCount('images') // for image count
+                ->withCount('offers')
                 ->paginate(10)
                 ->withQueryString(),
         ]);
@@ -114,5 +116,12 @@ class RealtorListingController extends Controller
         $listing->restore();
 
         return redirect()->back()->with('success', 'Listing was restored!');
+    }
+
+    public function show(Listing $listing){
+
+        return Inertia('Realtor/Show',[
+            'listing' => $listing->load('offers', 'offers.bidder')
+        ]);
     }
 }

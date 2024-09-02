@@ -28,6 +28,12 @@ const props = defineProps({
                 class="flex flex-col md:flex-row gap-2 md:items-center justify-between"
             >
                 <div :class="{ 'opacity-25': listing.deleted_at }">
+                    <div
+                        v-if="listing.sold_at != null"
+                        class="text-xs font-bold uppercase border border-dashed p-1 border-green-300 text-green-500 dark:border-green-600 dark:text-green-600 inline-block rounded-md mb-2"
+                    >
+                        sold
+                    </div>
                     <div class="xl:flex items-center gap-2">
                         <Price
                             :price="listing.price"
@@ -98,6 +104,18 @@ const props = defineProps({
                             class="block w-full btn-outline text-xs font-medium text-center"
                         >
                             Images ({{ listing.images_count }})</Link
+                        >
+                    </div>
+
+                    <div class="mt-2">
+                        <Link
+                            :href="
+                                route('realtor.listing.show', {
+                                    listing: listing.id,
+                                })
+                            "
+                            class="block w-full btn-outline text-xs font-medium text-center"
+                            >Offer ({{ listing.offers_count }})</Link
                         >
                     </div>
                 </section>

@@ -4,17 +4,15 @@ namespace App\Policies;
 
 use App\Models\Listing;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class ListingPolicy
 {
-    public function before(User $user, $ability)
-    {
-        if ($user->is_admin /*&& $ability === 'update'*/) {
-            return true;
-        }
-    }
-
+    // public function before(User $user, $ability)
+    // {
+    //     if ($user->is_admin /*&& $ability === 'update'*/) {
+    //         return true;
+    //     }
+    // }
 
     //User is means optional
     //if user not login then user can access listing
@@ -31,7 +29,11 @@ class ListingPolicy
      */
     public function view(User $user, Listing $listing): bool
     {
-        return true;
+        if ($listing->by_user_id === $user?->id) { // owner othe the listing
+            return true;
+        }
+
+        return $listing->sold_at === null;
     }
 
     /**
@@ -48,7 +50,7 @@ class ListingPolicy
     public function update(User $user, Listing $listing): bool
     {
         //only user can update own listing
-        return $user->id === $listing->by_user_id;
+        return ($listing->sold_at === null) && ($user->id === $listing->by_user_id);
     }
 
     /**
