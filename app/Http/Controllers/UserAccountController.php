@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -21,10 +22,13 @@ class UserAccountController extends Controller
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8|confirmed',
         ]));
-        
-        $user->password = Hash::make($user->password);
+
+        $user->password = Hash::make($request->password);
         $user->save();
+
         Auth::login($user);
+
+        event(new Registered($user)); //send email for registration
 
         return redirect()->route('listing.index')
             ->with('success', 'Account created!');

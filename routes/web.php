@@ -10,6 +10,8 @@ use App\Http\Controllers\RealtorListingAcceptOfferController;
 use App\Http\Controllers\RealtorListingController;
 use App\Http\Controllers\RealtorListingImageController;
 use App\Http\Controllers\UserAccountController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use PHPUnit\Framework\Attributes\Group;
 
@@ -28,6 +30,26 @@ Route::delete('logout', [AuthController::class, 'destroy'])->name('logout');
 Route::resource('user-account', UserAccountController::class)
     ->only(['create', 'store']);
 
+/*End Laravel Email Verification*/
+
+Route::get('/email/verify', function () {
+    return inertia('Auth/VerifyEmail');
+})->middleware('auth')->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect()->route('listing.index')->with('success', 'Email was verified.');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+
+    return back()->with('success', 'Verification link sent!');
+
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+/*End Laravel Email Verification*/
+
 Route::resource('notification', NotificationController::class)
     ->middleware('auth')->only(['index']);
 
@@ -40,7 +62,7 @@ Route::resource('listing.offer', ListingOfferController::class)->middleware('aut
 
 Route::prefix('realtor')
     ->name('realtor.')
-    ->middleware('auth')
+    ->middleware(['auth', 'verified'])
     ->group(function () {
         Route::name('listing.restore')
             ->put('listing/{listing}/restore', [RealtorListingController::class, 'restore']

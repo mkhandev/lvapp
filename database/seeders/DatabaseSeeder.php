@@ -22,16 +22,25 @@ class DatabaseSeeder extends Seeder
         ]);
 
         \App\Models\User::factory()->create([
-            'name' => 'Vistitor User',
-            'email' => 'visitor@example.com',
+            'name' => 'Vistitor two User',
+            'email' => 'visitor2@example.com',
         ]);
 
-        \App\Models\Listing::factory(10)->create([
+        \App\Models\User::factory()->create([
+            'name' => 'Vistitor three User',
+            'email' => 'visitor3@example.com',
+        ]);
+
+        \App\Models\Listing::factory(3)->create([
             'by_user_id' => 1
         ]);
 
-        \App\Models\Listing::factory(10)->create([
+        \App\Models\Listing::factory(3)->create([
             'by_user_id' => 2
+        ]);
+
+        \App\Models\Listing::factory(3)->create([
+            'by_user_id' => 3
         ]);
     }
 }
